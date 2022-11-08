@@ -1,69 +1,47 @@
 package com.bridgelabz;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+
+
+@RunWith(Parameterized.class)
 public class UserRegistrationTest {
-    UserRegistrationInput userRegistrationInput = new UserRegistrationInput();
+    private String emailTest;
+    private boolean expectedResult;
+    private UserRegistration validateEmail;
 
-    @Test
-    public void givenValidFirstName_shouldReturnTrue() {
-        boolean result = userRegistrationInput.isFirstNameValid("Prem");
-        Assert.assertTrue(result);
+    public UserRegistrationTest(String email, boolean expectedResult) {
+        this.emailTest = email;
+        this.expectedResult = expectedResult;
+    }
+
+    @Before
+    public void initialize() {
+        validateEmail = new UserRegistration();
+    }
+
+    @Parameterized.Parameters
+    public static Collection data() {
+        return Arrays.asList(new Object[][] { { "abc@yahoo.com", true }, { "abc-100@yahoo.com", true },
+                { "abc.100@yahoo.com", true }, { "abc111@abc.com", true }, { "abc-100@abc.net", true },
+                { "abc.100@abc.com.au", true }, { "abc@1.com", true }, { "abc@gmail.com.com", true },
+                { "abc+100@gmail.com", true }, { "abc", false }, { "abc@.com.my", false }, { "abc123@gmail.a", false },
+                { "abc123@.com", false }, { "abc123@.com.com", false }, { ".abc@abc.com", false },
+                { "abc()*@gmail.com", false }, { "abc@%*.com", false }, { "abc..2002@gmail.com", false },
+                { "abc.@gmail.com", false }, { "abc@abc@gmail.com", false }, { "abc@gmail.com.1a", false },
+                { "abc@gmail.com.aa.au", false } });
     }
 
     @Test
-    public void givenInvalidFirstName_shouldReturnFalse() {
-        boolean result = userRegistrationInput.isFirstNameValid("prem");
-        Assert.assertFalse(result);
-    }
-
-    @Test
-    public void givenValidLastName_shouldReturnTrue() {
-        boolean result = userRegistrationInput.isLastNameValid("Kumbhar");
-        Assert.assertTrue(result);
-    }
-
-    @Test
-    public void givenInvalidLastName_shouldReturnFalse() {
-        boolean result = userRegistrationInput.isFirstNameValid("kumbhar");
-        Assert.assertFalse(result);
-    }
-
-    @Test
-    public void givenValidEmail_shouldReturnTrue() {
-        boolean result = userRegistrationInput.isEmailValid("premk123@gmail.com");
-        Assert.assertTrue(result);
-    }
-
-    @Test
-    public void givenInvalidEmail_shouldReturnFalse() {
-        boolean result = userRegistrationInput.isEmailValid("premk123gmail.com");
-        Assert.assertFalse(result);
-    }
-
-    @Test
-    public void givenValidMobileNumber_shouldReturnTrue() {
-        boolean result = userRegistrationInput.isMobileNumberValid("7350447788");
-        Assert.assertTrue(result);
-    }
-
-    @Test
-    public void givenInvalidMobileNumber_shouldReturnFalse() {
-        boolean result = userRegistrationInput.isMobileNumberValid("73504477");
-        Assert.assertFalse(result);
-    }
-
-    @Test
-    public void givenValidPassword_shouldReturnTrue() {
-        boolean result = userRegistrationInput.isPasswordValid("Prem@123");
-        Assert.assertTrue(result);
-    }
-
-    @Test
-    public void givenInvalidPassword_shouldReturnFalse() {
-        boolean result = userRegistrationInput.isPasswordValid("prem123");
-        Assert.assertFalse(result);
+    public void givenEmailAsVar_ShouldReturnTrueorFalse() {
+        assertEquals(expectedResult, validateEmail.validateEmail(emailTest));
     }
 }
